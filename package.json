@@ -1,0 +1,24 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "This repository contains the code for a classic Battleship game, built using JavaScript and Test-Driven Development (TDD).",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndresDev28/Battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AndresDev28/Battleship/issues"
+  },
+  "homepage": "https://github.com/AndresDev28/Battleship#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
