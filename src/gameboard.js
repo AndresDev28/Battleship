@@ -3,7 +3,7 @@ export class Gameboard {
   constructor() {
     this.ships = []; // Ship's coordinates in the gameboard
     this.missedAttacks = [];
-    this.grid;
+    this.grid = createGrid(10, 10);
   }
 
   // Methods
@@ -46,4 +46,13 @@ export class Gameboard {
   areAllShipsSunk() {
     return this.ships.every(shipPlacement => shipPlacement.ship.isSunk());
   }
+
+}
+
+function createGrid(rows, columns) {
+  const grid = [];
+  for (let i = 0; i < rows; i++) {
+    grid[i] = new Array(columns).fill(null);
+  }
+  return grid;
 }
