@@ -19,14 +19,14 @@ describe('gameboard', () => {
     gameboard.placeShip(ship, [2, 1], true);
   });
 
-  test('recieveAttack() hits a ship', () => {
+  test('receiveAttack() hits a ship', () => {
     const ship = new Ship(3);
     gameboard.placeShip(ship, [1, 3], false);
-    gameboard.recieveAttack([1, 3]); // Verify is the ship was hited
+    gameboard.receiveAttack([1, 3]); // Verify is the ship was hited
   });
 
-  test('recieveAttack() record a miss', () => {
-    gameboard.recieveAttack([0, 0]); // Checks if the missed attack was recorded
+  test('receiveAttack() record a miss', () => {
+    gameboard.receiveAttack([0, 0]); // Checks if the missed attack was recorded
   });
 
   test('areAllShipsSunk() returns false when not all ships are sunk', () => {

@@ -16,8 +16,15 @@ export class Gameboard {
 
     this.ships.push(shipPlacement);
   }
-  recieveAttack(coordinates) {
+  receiveAttack(coordinates) {
     const [x, y] = coordinates; // Destructure the attack coordinate into x and y variables
+    if (x < 0 || x > 9 || y < 0 || y > 9) { // Check if coordinates are within valid boundaries (assuming a 10x10 grid)
+      throw new Error('Invalid coordinates');
+    }
+
+    if (this.missedAttacks.some(attack => attack[0] === x && attack[1] === y)) {
+      throw new Error ('Cannot attack the same coordinate twice');
+    }
 
     for (const shipPlacement of this.ships) { // Iterate over each ship placed on the board
       const {ship, coordinates: shipCoords, isVertical} = shipPlacement; // Destructure properties of the  shipPlacement object
