@@ -65,7 +65,7 @@ describe('Player', () => {
   });
 
   describe('generateRandomCoords', () => {
-    test('generateRandomcoords() generate coordinates inside of boundaries of the gameboard', () => {
+    test('generateRandomCoords() generate coordinates inside of boundaries of the gameboard', () => {
       const player = new Player('computer');
       const opponentGameboard = new Gameboard;
       const [x, y] = player.generateRandomCoords(opponentGameboard);
@@ -74,6 +74,47 @@ describe('Player', () => {
       expect(y).toBeGreaterThanOrEqual(0);
       expect(y).toBeLessThanOrEqual(9);
     });
+
+    test('generateRandomCoords() do not generate coordinates that have already been attacked', () => {
+      const player = new Player('computer');
+      const opponentGameboard = new Gameboard;
+      // Simulate some attacks on the gameboard
+      opponentGameboard.receiveAttack([2, 3]);
+      opponentGameboard.receiveAttack([5, 8]);
+      // Generate random coordinates
+      const [x, y] = player.generateRandomCoords(opponentGameboard);
+      // Check if the generated coordinates are not in the missedAttacks array
+      expect(opponentGameboard.missedAttacks).not.toContainEqual([x, y]);
+    });
+
+    test('generateRandomCoords() generates different coordinates each time it is called', () => {
+      const player = new Player('computer');
+      const opponentGameboard = new Gameboard();
+      
+      // Generate multiple sets of coordinates
+      const coordinates = [];
+      for (let i = 0; i < 10; i++) {
+        const coords = player.generateRandomCoords(opponentGameboard);
+        coordinates.push(coords);
+        
+        // Simulate an attack with these coordinates to avoid getting them again
+        // (since the method avoids already attacked coordinates)
+        opponentGameboard.receiveAttack(coords);
+      }
+      
+      // Check that all coordinates are unique
+      // We'll compare each pair of coordinates
+      for (let i = 0; i < coordinates.length; i++) {
+        for (let j = i + 1; j < coordinates.length; j++) {
+          const [x1, y1] = coordinates[i];
+          const [x2, y2] = coordinates[j];
+          
+          // Expect that at least one of the coordinates is different
+          expect(x1 === x2 && y1 === y2).toBe(false);
+        }
+      }
+    });
+
   });
 
 })

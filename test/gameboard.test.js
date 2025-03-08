@@ -22,7 +22,7 @@ describe('gameboard', () => {
   test('receiveAttack() hits a ship', () => {
     const ship = new Ship(3);
     gameboard.placeShip(ship, [1, 3], false);
-    gameboard.receiveAttack([1, 3]); // Verify is the ship was hited
+    gameboard.receiveAttack([1, 3]); // Verify is the ship was hit
   });
 
   test('receiveAttack() record a miss', () => {
