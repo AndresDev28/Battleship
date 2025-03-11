@@ -1,12 +1,13 @@
-
 import { Gameboard } from '../src/gameboard.js';
 import { Ship } from "../src/ship.js";
 
 describe('gameboard', () => {
   let gameboard;
+  let ship;
 
   beforeEach(() => {
     gameboard = new Gameboard(); 
+    ship = new Ship(3);
   });
 
   test('placeShip() places ship correctly in horizontal position', () => {
@@ -46,4 +47,27 @@ describe('gameboard', () => {
     ship2.hit(); ship2.hit(); // Sink ship2
     expect(gameboard.areAllShipsSunk()).toBe(true);
   });
+
+  test('placeShip() throws error if ship placement is out of bounds (horizontal)', () => {
+    expect(() => {
+      gameboard.placeShip(ship, [8, 8], false); 
+    }).toThrow(Error);
+  });
+
+  test('placeShip() throws error if ship placement is out of bounds (vertical)', () => {
+    expect(()=> {
+      gameboard.placeShip(ship, [8, 8], true); // Vertical
+    }).toThrow(Error);
+  });
+
+  test('placeShip() throws error if ship placement overlaps woth another ship (horizontal-horizontal', () => {
+    const ship1 = new Ship(3);
+    gameboard.placeShip(ship1, [2, 2], false);
+
+    const ship2 = new Ship(2);
+    expect(() => {
+      gameboard.placeShip(ship2, [2, 3], false);
+    }).toThrow(Error);
+  });
+
 })
