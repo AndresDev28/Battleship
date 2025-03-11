@@ -1,9 +1,13 @@
 
 export class Ship {
   constructor(length) {
+    if (length <= 0) {
+      throw new Error(`Ship's length must be grather than 0`);
+    }
     this.length = length;
     this.hits = 0;
     this.sunk = false;
+
   }
 
   // Methods
@@ -25,4 +29,3 @@ export class Ship {
     return this.hits >= this.length;
   }
 }
-

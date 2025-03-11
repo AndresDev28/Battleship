@@ -1,0 +1,12 @@
+{
+  "cSpell.words": [
+    "gameboard"
+  ],
+  "editor.fontSize": 14,
+  "quokka.fontSize": 14,
+  "scm.inputFontSize": 14,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "breadcrumbs.enabled": false,
+  "editor.cursorSmoothCaretAnimation": "on"
+}
