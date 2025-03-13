@@ -13,9 +13,8 @@ export class Ship {
   // Methods
   hit() {
     this.hits++;
-    if (this.hits >= this.length) {
-      return true;
-    }
+    this.sunk = this.hits >= this.length;
+    return this.sunk;
   }
 
   isSunk() {

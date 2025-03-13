@@ -11,6 +11,11 @@ export class Gameboard {
 
     this.validateShipPlacement(shipCoords);
     this.validateNoOverlap(shipCoords);
+
+    for (const coords of shipCoords) { // Iterate through the ship's coordinates
+      const [row, col] = coords; // Get the row and column of the coordinate.
+      this.grid[row][col] = ship; // Store the 'ship' object in the gameboard cell.
+    }
   
     // Valid placement
     const shipPlacement = {
@@ -64,16 +69,16 @@ export class Gameboard {
 
       if (isVertical) { // if the ship is placed vertically
         for (let i = 0; i < ship.length; i++) { // Iterate over the lenght of the ship
-          if (x === shipX && y === shipY + i) { // Check if the attack coordinates match any cell of the ship
-            ship.hit();
-            return true; // Indicates that the ship has been hit
+          if (x === shipX + i && y === shipY) { // Check if the attack coordinates match any cell of the ship
+            ship.hit(); // Update ship's state
+            return true; // Return true for any successful hit
           }
         }
       }else { // If the ship is placed horizontally
         for (let i = 0; i < ship.length; i++) {
-          if (x === shipX + i && y === shipY) {
-            ship.hit();
-            return true;
+          if (x === shipX && y === shipY + i) {
+            ship.hit(); // Update ship's state
+            return true; // Return true for any successful hit
           }
         }
       }
@@ -96,7 +101,7 @@ function createGrid(rows, columns) {
   return grid;
 }
 
-function calculateShipCoords(ship, startCoordinates, isVertical) {
+export function calculateShipCoords(ship, startCoordinates, isVertical) {
   const shipCoords = [];
   const startRow = startCoordinates[0];
   const startCol = startCoordinates[1];
