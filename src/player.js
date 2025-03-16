@@ -1,8 +1,7 @@
-
 import { Gameboard } from '../src/gameboard.js';
 export class Player {
-  constructor(type) {
-    this.gameboard = new Gameboard(); // Initialize gameboard
+  constructor(type, gameboard = null) {
+    this.gameboard = gameboard || new Gameboard(); // Use provided gameboard or create a new one
     this.type = type; // Human or computer
   }
 
