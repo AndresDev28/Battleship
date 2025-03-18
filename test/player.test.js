@@ -2,13 +2,14 @@ import { Player } from "../src/player.js";
 import { Gameboard } from "../src/gameboard.js";
 
 describe('Player', () => {
-  let humanPlayer, computerPlayer, opponentGameboard;
+  let humanPlayer, aiPlayer, opponentGameboard;
 
   beforeEach(() => {
     humanPlayer = new Player("human");
-    computerPlayer = new Player("computer");
+    aiPlayer = new Player("ai");
     opponentGameboard = new Gameboard();
   });
+  
   describe('create player', () => {
     test('creates human player correctly', () => {
       const player = new Player("human");
@@ -16,9 +17,9 @@ describe('Player', () => {
       expect(player.gameboard).toBeInstanceOf(Gameboard);
     });
   
-    test('creates computer player correctly', () => {
-      const player = new Player("computer");
-      expect(player.type).toBe("computer");
+    test('creates ai player correctly', () => {
+      const player = new Player("ai");
+      expect(player.type).toBe("ai");
       expect(player.gameboard).toBeInstanceOf(Gameboard);
     });
   });
@@ -66,7 +67,7 @@ describe('Player', () => {
 
   describe('generateRandomCoords', () => {
     test('generateRandomCoords() generate coordinates inside of boundaries of the gameboard', () => {
-      const player = new Player('computer');
+      const player = new Player('ai');
       const opponentGameboard = new Gameboard;
       const [x, y] = player.generateRandomCoords(opponentGameboard);
       expect(x).toBeGreaterThanOrEqual(0);
@@ -76,7 +77,7 @@ describe('Player', () => {
     });
 
     test('generateRandomCoords() do not generate coordinates that have already been attacked', () => {
-      const player = new Player('computer');
+      const player = new Player('ai');
       const opponentGameboard = new Gameboard;
       // Simulate some attacks on the gameboard
       opponentGameboard.receiveAttack([2, 3]);
@@ -88,7 +89,7 @@ describe('Player', () => {
     });
 
     test('generateRandomCoords() generates different coordinates each time it is called', () => {
-      const player = new Player('computer');
+      const player = new Player('ai');
       const opponentGameboard = new Gameboard();
       
       // Generate multiple sets of coordinates
@@ -114,7 +115,6 @@ describe('Player', () => {
         }
       }
     });
-
   });
 
 })

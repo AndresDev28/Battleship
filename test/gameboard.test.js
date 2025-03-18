@@ -1,5 +1,5 @@
 import { Gameboard, calculateShipCoords } from '../src/gameboard.js';
-import { Ship } from "../src/ship.js";
+import { Ship } from '../src/ship.js';
 
 describe('gameboard', () => {
   let gameboard;

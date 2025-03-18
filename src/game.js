@@ -1,18 +1,35 @@
-import { Player } from "../src/player.js";
-import { Gameboard } from "../src/gameboard.js";
-export function setupGame() {
-  // Create Gameboard instances for both players
-  const gameboard1 = new Gameboard();
-  const gameboard2 = new Gameboard();
+import { Player } from './player.js';
+import { Gameboard } from "./gameboard.js";
 
-  // Create Player instances, associating each player whit their Gameboard
-  const player1 = new Player("human", gameboard1);
-  const player2 = new Player("ai", gameboard2);
+export class Game {
+  constructor() {
+    this.player1 = null;
+    this.player2 = null;
+    this.gameboardPlayer1 = null;
+    this.gameboardPlayer2 = null;
+    this.currentPlayer = null; // To keep track of current player
+  }
 
-  // (Opcional por ahora) - Colocar barcos en los tableros (puedes añadir lógica de colocación aquí más adelante)
-    // ... (Lógica para colocar barcos - aleatoria o predefinida - la añadiremos después) ...
+  startGame() {
+    // 1. Create gameboards for both players
+    this.gameboardPlayer1 = new Gameboard();
+    this.gameboardPlayer2 = new Gameboard();
 
-  // Return the created game objects (so the test can access them and make assertions)
+    // 2. Create players, associating them with their gameboards
+    this.player1 = new Player("Human", this.gameboardPlayer1);
+    this.player2 = new Player("ai", this.gameboardPlayer2);
 
-  return {player1, player2, gameboard1, gameboard2};
+    // 3. (Optional - Ship placement - we'll add this later) ...
+
+    // 4. Set the initial turn (Player 1 start by default)
+    this.currentPlayer = this.player1;
+  }
+
+  nextTurn() {
+    if (this.currentPlayer === this.player1) {
+      this.currentPlayer = this.player2;
+    } else {
+      this.currentPlayer = this.player1;
+    }
+  }
 }
