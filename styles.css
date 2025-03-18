@@ -1,0 +1,21 @@
+.title {
+  color: green;
+}
+
+.gameboards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.gameboard {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin-right: 10px;
+}
+
+.gameboard-cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid gray;
+}
