@@ -1,21 +1,183 @@
-.title {
-  color: green;
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.gameboards-container {
+.new-game-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  color: green;
+  font-size: 3em;
+}
+#newGameButton {
+  padding: 15px 30px;
+  font-size: 1.5em;
+  background-color:  #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#newGameButton:hover {
+  background-color: #45a049;
+}
+
+.hidden {
+  display: none;
+}
+
+.game-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
+.player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
 .gameboard {
   border-collapse: collapse;
-  border: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
   margin-right: 10px;
 }
-
+.gameboard th {
+  background-color: #eee;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  border-right: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
 .gameboard-cell {
   width: 30px;
   height: 30px;
+  border-top: 1px solid gray;
+  border-left: 1px solid gray;
+  border-right: none;
+  border-bottom: none;
+}
+#fleetButton {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+#fleetButton:hover {
+  background-color: rgb(0, 0, 182);
+}
+#fleetSelection {
+  margin-top: 20px;
+}
+.ship-option {
+  background-color: lightgray;
   border: 1px solid gray;
+  height: fit-content;
+  padding: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  width: fit-content; /* Ajustar el ancho al contenido */
+}
+.ship-option:hover {
+  background-color: #ddd;
+}
+
+/* Ship Placement Modal styles */
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Habilitar scroll si el contenido es muy largo */
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* Vertical & and horizontal alignment */
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 1.5rem;
+  box-shadow:  1px 2px 5px rgba(0, 0, 0, 0.4);
+  width: 80%;
+  max-width: 500px;
+}
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal label {
+  display: block; /* Labels en líneas separadas */
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+.modal input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.radio-group {
+  margin-bottom: 15px;
+}
+.radio-group label {
+  display: inline-block;
+  margin-right: 15px;
+}
+#placeShipButtonModal {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#placeShipButtonModal:hover {
+  background-color: #45a049;
+}
+
+/* Input coordinates error message styles */
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Different cell styles */
+
+.ship-cell {
+  background-color: lightblue;
+}
+.hit-cell {
+  background-color: red;
+}
+.miss-cell {
+  background-color: rgb(147, 147, 147);
 }

@@ -8,10 +8,43 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title">Battleship</h1>
-    <div class="gameboards-container">
-      <div id="player-board-container"></div>
-      <div id="computer-board-container" display="hide"></div>
+    <div class="new-game-container">
+      <h1 class="title">Battleship</h1>
+      <button id="newGameButton">New Game</button>
+    </div>
+    
+  <!-- Render Gameboard after start new game -->
+    <div class="game-container">
+      <div class="player-container">
+        <div id="playerBoard" class="hidden"></div>
+        <button id="fleetButton" class="hidden">Choose your Fleet</button>
+        <div id="fleetSelection" class="hidden">
+          <h3>Your Fleet</h3>
+          <div class="ship-option" id="carrier-option" data-ship-type="carrier" draggable="true">Carrier (5 cells)</div>
+          <div class="ship-option" id="battleship-option" data-ship-type="battleship" draggable="true">Battleship (4 cells)</div>
+          <div class="ship-option" id="destroyer-option" data-ship-type="destroyer" draggable="true">Destroyer (3 cells)</div>
+          <div class="ship-option" id="patrolBoat-option" data-ship-type="patrolBoat" draggable="true">Patrol Boat (2 cells)</div>
+        </div>
+        <!-- Modal to set the ship on the gamebord -->
+        <div id="shipPlacementModal" class="modal hidden">
+          <div class="modal-content">
+            <span class="close-button" id="closeModalButton">x</span>
+            <h3>Place <span id="modalShipName"></span></h3>
+            <label for="coordinateInput">Coordinate [Y, X]</label>
+            <input type="text" id="coordinateInput" placeholder="e.g: 5,5">
+            <span id="coordinateError" class="error-message hidden"></span>
+            <label>Orientation:</label>
+            <div class="radio-group">
+              <input type="radio" name="orientation" id="orientationHorizontal" value="horizontal" checked>
+              <label for="orientationHorizontal">Horizontal</label>
+              <input type="radio" name="orientation" id="orientationVertical" value="vertical">
+              <label for="orientationVertical">Vertical</label>
+            </div>
+            <button id="placeShipButtonModal">Place Ship</button>
+          </div>
+        </div>
+      </div>
+      <div id="computerBoard" class="hidden"></div>
     </div>
   </div>
 

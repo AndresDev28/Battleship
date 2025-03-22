@@ -8,29 +8,33 @@ export class Gameboard {
   // Methods
   placeShip(ship, coordinates, isVertical) {
     const shipCoords = calculateShipCoords(ship, coordinates, isVertical);
-
+    
+    // Validar antes de hacer cualquier modificación al tablero
     this.validateShipPlacement(shipCoords);
     this.validateNoOverlap(shipCoords);
 
-    for (const coords of shipCoords) { // Iterate through the ship's coordinates
-      const [row, col] = coords; // Get the row and column of the coordinate.
-      this.grid[row][col] = ship; // Store the 'ship' object in the gameboard cell.
+    // Si las validaciones pasan, colocar el barco
+    for (const coords of shipCoords) {
+      const [row, col] = coords;
+      this.grid[row][col] = ship;
     }
-  
-    // Valid placement
+
+    // Registrar la colocación del barco
     const shipPlacement = {
       ship,
       coordinates,
       isVertical,
     };
     this.ships.push(shipPlacement);
+    return true;
   }
 
   validateShipPlacement(shipCoords) {
     for (const coord of shipCoords) {
       const [row, col] = coord;
       if (row < 0 || row > 9 || col < 0 || col > 9) {
-        throw new Error('Invalid ship placement: Ship is out of bounds of gameboard');
+        const direction = col > 9 ? 'right' : col < 0 ? 'left' : row > 9 ? 'bottom' : 'top';
+        throw new Error(`Ship extends beyond the ${direction} edge of the board`);
       }
     }
   }
@@ -46,7 +50,7 @@ export class Gameboard {
         
         for (const placedShipCoord of placedShipCoords) {
           if (newCoord[0] === placedShipCoord[0] && newCoord[1] === placedShipCoord[1]) {
-            throw new Error('Ship overlap detected');
+            throw new Error('Cannot place ship here: overlaps with another ship');
           }
         }
       }
@@ -101,17 +105,17 @@ function createGrid(rows, columns) {
   return grid;
 }
 
-export function calculateShipCoords(ship, startCoordinates, isVertical) {
+export function calculateShipCoords(ship, startCoordinates, vertical) {
   const shipCoords = [];
   const startRow = startCoordinates[0];
   const startCol = startCoordinates[1];
   const shiplength = ship.length;
 
-  if(!isVertical) { // Horizontal
+  if(!vertical) { // Horizontal: incrementa la columna manteniendo la misma fila
     for (let i = 0; i < shiplength; i++) {
       shipCoords.push([startRow, startCol + i]);
-    }
-  }else { // Vertical
+    }  
+  }else { // Vertical: incrementa la fila manteniendo la misma columna
     for (let i = 0; i < shiplength; i++) {
       shipCoords.push([startRow + i, startCol]);
     }
