@@ -10,7 +10,13 @@
   flex-direction: column;
   margin-bottom: 1.5rem;
 }
-
+.game-status-container {
+  border: 2px solid #ccc;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
 .title {
   color: green;
   font-size: 3em;

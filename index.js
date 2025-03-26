@@ -15,6 +15,9 @@ const modalShipNameSpan = document.getElementById('modalShipName');
 const placeShipModalBtn = document.getElementById('placeShipButtonModal');
 let currentShipType = null; // Variable global para guardar el barco que se está colocando desde el modal (inicialmente null)
 const coordErrorSpan = document.getElementById('coordinateError');
+let shipPlacedCount = 0;
+const gameStatusDisplay = document.getElementById('gameStatusContainer');
+
 
 
 const gameInstance = new Game();
@@ -119,8 +122,10 @@ placeShipModalBtn.addEventListener('click', () => {
       const placementResult = gameInstance.gameboardPlayer1.placeShip(shipToPlace, coords, orientationVertical);
 
       if (placementResult) {
-        console.log("Ship placed successfully!", gameInstance.gameboardPlayer1.ships);
+        console.log(`${currentShipType} placed successfully!`, gameInstance.gameboardPlayer1.ships);
         const placedShipCoords = calculateShipCoords(shipToPlace, coords, orientationVertical);
+        const shipPlacedToRemove = document.getElementById(`ship-option-${currentShipType}`);
+        shipPlacedToRemove.remove();
 
         placedShipCoords.forEach(coord => {
           const [row, col] = coord;
@@ -128,10 +133,12 @@ placeShipModalBtn.addEventListener('click', () => {
           updateCellVisual(cellElement, 'ship');
         });
 
-        // Ocultar el modal y limpiar el input después de una colocación exitosa
+        // Ocultar el modal y limpiar el input después de una colocación exitosa y quitar el barco colocado de la lista
+        shipPlacedCount++;
         shipPlacementModal.classList.add('hidden');
         coordinateInput.value = '';
         coordErrorSpan.classList.add('hidden');
+        startGameAfterFleetPlaced();
       }
     } catch (error) {
       console.error('Ship placement error:', error.message);
@@ -151,6 +158,17 @@ document.getElementById('coordinateInput').addEventListener('input', () => {
     coordErrorSpan.classList.add('hidden');
   }
 });
+
+function startGameAfterFleetPlaced() {
+  if (shipPlacedCount === 5) {
+    console.log("Player start to attack!");
+    fleetButton.classList.add('hidden')
+    const fleetSelection = document.getElementById('fleetSelection');
+    fleetSelection.remove();
+    gameStatusDisplay.classList.remove('hidden');
+    gameStatusDisplay.textContent = "Your Turn to Attack!";
+  }
+}
 
 renderGameboard(gameInstance.gameboardPlayer1, playerBoard);
 renderGameboard(gameInstance.gameboardPlayer2, computerBoard);

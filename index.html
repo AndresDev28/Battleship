@@ -10,6 +10,7 @@
   <div class="container">
     <div class="new-game-container">
       <h1 class="title">Battleship</h1>
+      <div  id="gameStatusContainer" class="game-status-container hidden"></div>
       <button id="newGameButton">New Game</button>
     </div>
     
@@ -19,11 +20,12 @@
         <div id="playerBoard" class="hidden"></div>
         <button id="fleetButton" class="hidden">Choose your Fleet</button>
         <div id="fleetSelection" class="hidden">
-          <h3>Your Fleet</h3>
-          <div class="ship-option" id="carrier-option" data-ship-type="carrier" draggable="true">Carrier (5 cells)</div>
-          <div class="ship-option" id="battleship-option" data-ship-type="battleship" draggable="true">Battleship (4 cells)</div>
-          <div class="ship-option" id="destroyer-option" data-ship-type="destroyer" draggable="true">Destroyer (3 cells)</div>
-          <div class="ship-option" id="patrolBoat-option" data-ship-type="patrolBoat" draggable="true">Patrol Boat (2 cells)</div>
+          <h3 id="yourFleetTitle">Your Fleet</h3>
+          <div class="ship-option" id="ship-option-carrier" data-ship-type="carrier" draggable="true">Carrier (5 cells)</div>
+          <div class="ship-option" id="ship-option-battleship" data-ship-type="battleship" draggable="true">Battleship (4 cells)</div>
+          <div class="ship-option" id="ship-option-destroyer" data-ship-type="destroyer" draggable="true">Destroyer (3 cells)</div>
+          <div class="ship-option" id="ship-option-submarine" data-ship-type="submarine" draggable="true">Submarine(3 cells)</div>
+          <div class="ship-option" id="ship-option-patrolBoat" data-ship-type="patrolBoat" draggable="true">Patrol Boat (2 cells)</div>
         </div>
         <!-- Modal to set the ship on the gamebord -->
         <div id="shipPlacementModal" class="modal hidden">
