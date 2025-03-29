@@ -2,6 +2,7 @@ import { renderGameboard, isCellPartOfShip, updateCellVisual } from '../src/dom.
 import { Gameboard, calculateShipCoords } from '../src/gameboard.js';
 import { Game } from "../src/game.js";
 import { Ship } from '../src/ship.js';
+import { Player } from '../src/player.js';
 
 const playerBoard = document.getElementById('playerBoard');
 const computerBoard = document.getElementById('computerBoard');
@@ -17,12 +18,15 @@ let currentShipType = null; // Variable global para guardar el barco que se estÃ
 const coordErrorSpan = document.getElementById('coordinateError');
 let shipPlacedCount = 0;
 const gameStatusDisplay = document.getElementById('gameStatusContainer');
+let shipLength;
 
 
 
 const gameInstance = new Game();
 window.gameInstance = gameInstance;
 gameInstance.startGame();
+const computerPlayer = gameInstance.player2;
+export const gameboardComputer = gameInstance.gameboardPlayer2;
 
 function validateCoordinateInput(coordinate) {
   if (!coordinate) {
@@ -104,17 +108,8 @@ placeShipModalBtn.addEventListener('click', () => {
     coordErrorSpan.classList.add('hidden');
     const coords = parseCoordinateInput(coordinateInput.value);
     console.log('Parsed coordinates: ', coords);
-
-    let shipLength;
-    switch (currentShipType) {
-      case 'carrier': shipLength = 5; break;
-      case 'battleship': shipLength = 4; break;
-      case 'destroyer': shipLength = 3; break;
-      case 'submarine': shipLength = 3; break;
-      case 'patrolBoat': shipLength = 2; break;
-      default: shipLength = 0;
-    }
-
+    
+    const shipLength = Player.getShipLength(currentShipType);
     const shipToPlace = new Ship(shipLength);
     console.log('Orientation (vertical):', orientationVertical);
 
@@ -167,8 +162,39 @@ function startGameAfterFleetPlaced() {
     fleetSelection.remove();
     gameStatusDisplay.classList.remove('hidden');
     gameStatusDisplay.textContent = "Your Turn to Attack!";
+    computerBoard.classList.remove('hidden');
+    computerPlaceShips(gameboardComputer);
   }
 }
 
+function computerPlaceShips(gameboardComputer) {
+  const shipTypesToPlace = ['carrier', 'battleship', 'destroyer', 'submarine', 'patrolBoat'];
+  const computerPlayer = gameInstance.player2;
+
+  shipTypesToPlace.forEach(shipType => {
+    let shipPlaced = false;
+    while(!shipPlaced) {
+      try {
+        const shipLength = Player.getShipLength(shipType);
+        const placement = computerPlayer.getRandomCoordsForBoard(gameboardComputer, shipLength);
+        const ship = new Ship(shipLength);
+        
+        console.log(`Intentando colocar ${shipType} en [${placement.coords[0]}, ${placement.coords[1]}] ${placement.isVertical ? 'vertical' : 'horizontal'}`);
+        
+        const placementResult = gameboardComputer.placeShip(ship, placement.coords, placement.isVertical);
+
+        if (placementResult === true) {
+          shipPlaced = true;
+          console.log(`Computer placed ${shipType} at [${placement.coords[0]}, ${placement.coords[1]}] ${placement.isVertical ? 'vertically' : 'horizontally'}`);
+        }
+      } catch (error) {
+        console.error(`Computer AI placement failed for ${shipType}:`, error.message);
+      }
+    }
+  });
+
+  console.log(`Computer placed fleet successfully!`);
+}
+
 renderGameboard(gameInstance.gameboardPlayer1, playerBoard);
-renderGameboard(gameInstance.gameboardPlayer2, computerBoard);
+renderGameboard(gameboardComputer, computerBoard);

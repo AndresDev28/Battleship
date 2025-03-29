@@ -3,6 +3,7 @@ export class Gameboard {
     this.ships = []; // Ship's coordinates in the gameboard
     this.missedAttacks = [];
     this.grid = createGrid(10, 10);
+    this.attemptedPlacements = [];
   }
 
   // Methods
@@ -28,6 +29,7 @@ export class Gameboard {
     this.ships.push(shipPlacement);
     return true;
   }
+
 
   validateShipPlacement(shipCoords) {
     for (const coord of shipCoords) {

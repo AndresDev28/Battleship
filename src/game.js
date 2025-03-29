@@ -19,8 +19,6 @@ export class Game {
     this.player1 = new Player("Human", this.gameboardPlayer1);
     this.player2 = new Player("ai", this.gameboardPlayer2);
 
-    // 3. (Optional - Ship placement - we'll add this later) ...
-
     // 4. Set the initial turn (Player 1 start by default)
     this.currentPlayer = this.player1;
   }

@@ -63,57 +63,69 @@ describe('Player', () => {
       // Check if calling attack() with the same coordinates again throws an error
       expect(() => new Player('human').attack(opponentGameboard, [7, 5])).toThrow(Error);
     });
+
+    test('attack() should call receiveAttack on the opponent gameboard', () => {
+      const player = new Player('human');
+      const opponentGameboard = new Gameboard();
+      const coordinates = [0, 0];
+
+      player.attack(opponentGameboard, coordinates);
+      expect(opponentGameboard.missedAttacks).toContainEqual(coordinates);
+    });
   });
 
-  describe('generateRandomCoords', () => {
-    test('generateRandomCoords() generate coordinates inside of boundaries of the gameboard', () => {
+  describe('getRandomCoordsForBoard', () => {
+    test('getRandomCoordsForBoard() generate coordinates inside of boundaries of the gameboard', () => {
       const player = new Player('ai');
-      const opponentGameboard = new Gameboard;
-      const [x, y] = player.generateRandomCoords(opponentGameboard);
+      const opponentGameboard = new Gameboard();
+      const result = player.getRandomCoordsForBoard(opponentGameboard, 5);
+      
+      // Verificar que el resultado tiene el formato correcto
+      expect(result).toHaveProperty('coords');
+      expect(result).toHaveProperty('isVertical');
+      
+      // Verificar que las coordenadas están dentro de los límites
+      const [x, y] = result.coords;
       expect(x).toBeGreaterThanOrEqual(0);
       expect(x).toBeLessThanOrEqual(9);
       expect(y).toBeGreaterThanOrEqual(0);
       expect(y).toBeLessThanOrEqual(9);
+      
+      // Verificar que isVertical es un booleano
+      expect(typeof result.isVertical).toBe('boolean');
     });
 
-    test('generateRandomCoords() do not generate coordinates that have already been attacked', () => {
-      const player = new Player('ai');
-      const opponentGameboard = new Gameboard;
-      // Simulate some attacks on the gameboard
-      opponentGameboard.receiveAttack([2, 3]);
-      opponentGameboard.receiveAttack([5, 8]);
-      // Generate random coordinates
-      const [x, y] = player.generateRandomCoords(opponentGameboard);
-      // Check if the generated coordinates are not in the missedAttacks array
-      expect(opponentGameboard.missedAttacks).not.toContainEqual([x, y]);
-    });
-
-    test('generateRandomCoords() generates different coordinates each time it is called', () => {
+    test('getRandomCoordsForBoard() do not generate coordinates that have already been attacked', () => {
       const player = new Player('ai');
       const opponentGameboard = new Gameboard();
       
-      // Generate multiple sets of coordinates
-      const coordinates = [];
-      for (let i = 0; i < 10; i++) {
-        const coords = player.generateRandomCoords(opponentGameboard);
-        coordinates.push(coords);
-        
-        // Simulate an attack with these coordinates to avoid getting them again
-        // (since the method avoids already attacked coordinates)
-        opponentGameboard.receiveAttack(coords);
-      }
+      // Simular algunos ataques previos
+      opponentGameboard.receiveAttack([0, 0]);
+      opponentGameboard.receiveAttack([5, 5]);
+      opponentGameboard.receiveAttack([5, 8]);
       
-      // Check that all coordinates are unique
-      // We'll compare each pair of coordinates
-      for (let i = 0; i < coordinates.length; i++) {
-        for (let j = i + 1; j < coordinates.length; j++) {
-          const [x1, y1] = coordinates[i];
-          const [x2, y2] = coordinates[j];
-          
-          // Expect that at least one of the coordinates is different
-          expect(x1 === x2 && y1 === y2).toBe(false);
-        }
+      // Generar coordenadas aleatorias
+      const result = player.getRandomCoordsForBoard(opponentGameboard, 5);
+      const [x, y] = result.coords;
+      
+      // Verificar que las coordenadas generadas no están en missedAttacks
+      expect(opponentGameboard.missedAttacks).not.toContainEqual([x, y]);
+    });
+
+    test('getRandomCoordsForBoard() generates different coordinates each time it is called', () => {
+      const player = new Player('ai');
+      const opponentGameboard = new Gameboard();
+      const results = new Set();
+
+      // Generar múltiples coordenadas y verificar que son diferentes
+      for (let i = 0; i < 10; i++) {
+        const result = player.getRandomCoordsForBoard(opponentGameboard, 5);
+        const coordString = JSON.stringify(result.coords); // Convertir coordenadas a string para comparar
+        results.add(coordString);
       }
+
+      // Debería haber más de una coordenada única generada
+      expect(results.size).toBeGreaterThan(1);
     });
   });
 
