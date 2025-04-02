@@ -1,6 +1,17 @@
+import { getModalShipValue } from '../index.js';
+// Crear elemento para mostrar coordenadas (mouseover)
+const coordsDisplay = document.createElement('div');
+coordsDisplay.classList.add('coords-display');
+coordsDisplay.style.position = 'fixed';
+coordsDisplay.style.display = 'none';
+coordsDisplay.style.zIndex = '1000';
+coordsDisplay.style.pointerEvents = 'none';
+document.body.appendChild(coordsDisplay);
+
 export function renderGameboard(gameboard, container) {
   const table = document.createElement('table');
   table.classList.add('gameboard');
+
 
   // Array 2D para guardar las referencias a las celdas <td>
   const cellElements = [];
@@ -41,9 +52,30 @@ export function renderGameboard(gameboard, container) {
         if (isCellPartOfShip(gameboard, rowIndex, colIndex)) {
             tableCell.classList.add('ship-cell');
         }
+        if (container.id === 'computerBoard') { // Se dispara sólo en el tablero de la computadora
+          tableCell.addEventListener('mouseover', (e) => {
+            // const rect = e.target.getBoundingClientRect();
+            // console.log(rect);
+            const row = e.target.dataset.row;
+            const col = e.target.dataset.col;
+            // console.log(`[${row}, ${col}]`);
 
+            //1. Actualizar contenido
+            coordsDisplay.textContent = `[${row}, ${col}]`;
+            //2. Posicionar
+            coordsDisplay.style.left = `${e.clientX + 15}px`;
+            coordsDisplay.style.top = `${e.clientY + 15}px`;
+            //3. Mostrar
+            coordsDisplay.style.display = 'block';
+          });
+  
+          tableCell.addEventListener('mouseout', (e) => {
+            coordsDisplay.style.display = 'none';
+          });
+        }
+        
         tableCell.addEventListener('dragover', (event) => {
-            event.preventDefault();
+          event.preventDefault();
         });
 
         tableCell.addEventListener('drop', (event) => {

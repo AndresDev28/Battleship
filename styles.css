@@ -187,3 +187,14 @@
 .miss-cell {
   background-color: rgb(147, 147, 147);
 }
+
+/* Tooltip styles */
+.coords-display {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}

@@ -91,15 +91,7 @@ shipOptions.forEach(shipOption => {
   });
 });
 
-// Close ship placement modal
-closeModalBtn.addEventListener('click', () => {
-  shipPlacementModal.classList.add('hidden');
-  coordErrorSpan.classList.add('hidden'); // Ocultar mensaje de error al cerrar el modal
-  document.getElementById('coordinateInput').value = ''; // Limpiar el input
-});
-
-// Obtener los valores del modal con el botón Place Ship
-placeShipModalBtn.addEventListener('click', () => {
+export function getModalShipValue() {
   const coordinateInput = document.getElementById('coordinateInput');
   const orientationVertical = document.getElementById('orientationVertical').checked;
   const validationResult = validateCoordinateInput(coordinateInput.value);
@@ -144,6 +136,18 @@ placeShipModalBtn.addEventListener('click', () => {
     coordErrorSpan.textContent = validationResult.errorMessage;
     coordErrorSpan.classList.remove('hidden');
   }
+}
+
+// Close ship placement modal
+closeModalBtn.addEventListener('click', () => {
+  shipPlacementModal.classList.add('hidden');
+  coordErrorSpan.classList.add('hidden'); // Ocultar mensaje de error al cerrar el modal
+  document.getElementById('coordinateInput').value = ''; // Limpiar el input
+});
+
+// Obtener los valores del barco a colocar
+placeShipModalBtn.addEventListener('click', () => {
+  getModalShipValue();
 });
 
 // Añadir listener para ocultar mensaje de error cuando el input cambie
