@@ -4,6 +4,7 @@ export class Ship {
     if (length <= 0) {
       throw new Error(`Ship's length must be grather than 0`);
     }
+    //this.shipName = shipName;
     this.length = length;
     this.hits = 0;
     this.sunk = false;

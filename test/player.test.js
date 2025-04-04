@@ -70,7 +70,7 @@ describe('Player', () => {
       const coordinates = [0, 0];
 
       player.attack(opponentGameboard, coordinates);
-      expect(opponentGameboard.missedAttacks).toContainEqual(coordinates);
+      expect(opponentGameboard.grid[coordinates[0]][coordinates[1]]).toBe('miss');
     });
   });
 
@@ -109,7 +109,7 @@ describe('Player', () => {
       const [x, y] = result.coords;
       
       // Verificar que las coordenadas generadas no están en missedAttacks
-      expect(opponentGameboard.missedAttacks).not.toContainEqual([x, y]);
+      expect(opponentGameboard.grid[x][y]).toBeNull();
     });
 
     test('getRandomCoordsForBoard() generates different coordinates each time it is called', () => {

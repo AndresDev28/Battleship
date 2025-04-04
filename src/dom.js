@@ -8,7 +8,13 @@ coordsDisplay.style.zIndex = '1000';
 coordsDisplay.style.pointerEvents = 'none';
 document.body.appendChild(coordsDisplay);
 
-export function renderGameboard(gameboard, container) {
+export function renderGameboard(gameboard, container, clickCellCallback) {
+    console.log(`--- Rendering board for: ${container.id} ---`); // <-- NUEVO
+    console.log(`Clearing container ${container.id}`); // <-- NUEVO
+    container.innerHTML = ''; 
+    console.log(`Container ${container.id} cleared`); // <-- NUEVO
+
+
   const table = document.createElement('table');
   table.classList.add('gameboard');
 
@@ -49,16 +55,32 @@ export function renderGameboard(gameboard, container) {
         tableCell.dataset.row = rowIndex; // Guardar el índice de fila como data attribute
         tableCell.dataset.col = colIndex; // Guardar el índice de columna como data attribute
 
-        if (isCellPartOfShip(gameboard, rowIndex, colIndex)) {
-            tableCell.classList.add('ship-cell');
+        // Otener estado Real
+        const cellState = gameboard.getCellState([rowIndex, colIndex]);
+
+        // Ocultar barcos enemigos no impactados
+        let stateToDisplay = cellState;
+        if (container.id === 'computerBoard' && cellState === 'ship') {
+          stateToDisplay = 'empty';
         }
-        if (container.id === 'computerBoard') { // Se dispara sólo en el tablero de la computadora
+
+        // Aplicar estilo visual usando la función helper
+        console.log('Estado a mostrar:', stateToDisplay);
+        updateCellVisual(tableCell, stateToDisplay);
+
+        // Agregar contenido visual extra
+        tableCell.textContent = '';
+        if (stateToDisplay === 'hit') {
+          tableCell.textContent = '💥';
+        } else if (stateToDisplay === 'miss') {
+          tableCell.textContent = '⚪';
+        }
+
+        // Agregar listeners (hover y clicks condicional)
+        if (container.id === 'computerBoard') {
           tableCell.addEventListener('mouseover', (e) => {
-            // const rect = e.target.getBoundingClientRect();
-            // console.log(rect);
             const row = e.target.dataset.row;
             const col = e.target.dataset.col;
-            // console.log(`[${row}, ${col}]`);
 
             //1. Actualizar contenido
             coordsDisplay.textContent = `[${row}, ${col}]`;
@@ -68,11 +90,27 @@ export function renderGameboard(gameboard, container) {
             //3. Mostrar
             coordsDisplay.style.display = 'block';
           });
-  
+
           tableCell.addEventListener('mouseout', (e) => {
             coordsDisplay.style.display = 'none';
           });
         }
+
+        if (cellState === 'empty' || cellState === 'ship') { // Solo atacable si la celda est;a vacía o hay un barco
+          tableCell.addEventListener('click', (e) => {
+            const row = e.target.dataset.row; 
+            const col = e.target.dataset.col;
+
+            if (typeof clickCellCallback === 'function') { // Llamar a callback si existe
+              clickCellCallback(row, col); // Pasa las coordenadas
+            }
+          });
+          // Resetear cursor por si antes era 'not-allowed'
+          tableCell.style.cursor = 'pointer';
+        } else {
+          tableCell.style.cursor = 'not-allowed';
+        }
+
         
         tableCell.addEventListener('dragover', (event) => {
           event.preventDefault();
@@ -90,10 +128,9 @@ export function renderGameboard(gameboard, container) {
     cellElements.push(rowCellElements); // Añadir array de celdas de la fila al array principal de celdas
   }
   gameboard.cellElements = cellElements; // Guardamos el array de celdas en el objeto gameboard
+
   container.appendChild(table);
-}
-export function isCellPartOfShip (gameboard, row, col) {
-  return false;
+  console.log(`Appended table to ${container.id}`); // <-- NUEVO
 }
 
 export function updateCellVisual(cellElement, cellState) {

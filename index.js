@@ -1,4 +1,4 @@
-import { renderGameboard, isCellPartOfShip, updateCellVisual } from '../src/dom.js';
+import { renderGameboard, updateCellVisual } from '../src/dom.js';
 import { Gameboard, calculateShipCoords } from '../src/gameboard.js';
 import { Game } from "../src/game.js";
 import { Ship } from '../src/ship.js';
@@ -18,7 +18,7 @@ let currentShipType = null; // Variable global para guardar el barco que se est�
 const coordErrorSpan = document.getElementById('coordinateError');
 let shipPlacedCount = 0;
 const gameStatusDisplay = document.getElementById('gameStatusContainer');
-let shipLength;
+const gameInfo = document.getElementById('gameInfo');
 
 
 
@@ -26,6 +26,7 @@ const gameInstance = new Game();
 window.gameInstance = gameInstance;
 gameInstance.startGame();
 const computerPlayer = gameInstance.player2;
+const humanPlayer = gameInstance.player1;
 export const gameboardComputer = gameInstance.gameboardPlayer2;
 
 function validateCoordinateInput(coordinate) {
@@ -70,12 +71,14 @@ function parseCoordinateInput(coordinate) {
 
 // Event listener to the "New Game" button
 newGameButton.addEventListener('click', () => {
+  console.log("Mostrando tablero de jugador...");
   playerBoard.classList.remove('hidden');
   fleetButton.classList.remove('hidden');
   newGameButton.classList.add('hidden');
 });
 // Event listener to the "Choose your Fleet" button
 fleetButton.addEventListener('click', () => {
+  console.log("Mostrando flota de jugador a colocar...")
   fleetButton.classList.add('hidden');
   fleetSelection.classList.remove('hidden');
 });
@@ -166,6 +169,7 @@ function startGameAfterFleetPlaced() {
     fleetSelection.remove();
     gameStatusDisplay.classList.remove('hidden');
     gameStatusDisplay.textContent = "Your Turn to Attack!";
+    gameInfo.style.display = 'block';
     computerBoard.classList.remove('hidden');
     computerPlaceShips(gameboardComputer);
   }
@@ -200,5 +204,25 @@ function computerPlaceShips(gameboardComputer) {
   console.log(`Computer placed fleet successfully!`);
 }
 
+function handlePlayerAttack(row, col) {
+  console.log(`handlePlayerAttack: Attacking [${row}, ${col}] on computerBoard`);
+  const numericRow = parseInt(row);
+  const numericCol = parseInt(col);
+
+  // 1. Comprobar si es turno del jugador
+  // 2. Llamar a computerPlayer.gameboard.receiveAttack([row, col]);
+  // 3. Comprobar si el ataque fue válido (no repetido)
+  const attackResult = gameboardComputer.receiveAttack([numericRow, numericCol]); // Vemos que devuelve reciceAttack (true/false)
+  console.log('Attack result: ', attackResult);
+  console.log(`handlePlayerAttack: Calling renderGameboard for computerBoard UPDATE`);
+  // 4. Actualizar la UI (renderBoard de nuevo para el ordenador)
+  renderGameboard(gameboardComputer, computerBoard, handlePlayerAttack) // Llamamos a handleAttack dentro de ella misma para que siga siendo clicable
+  
+    
+    // 5. Mostrar mensaje de hit/miss/sunk (en tu nuevo game-info)
+    // 6. Comprobar si el juego terminó
+    // 7. Si no, cambiar turno e iniciar el ataque del ordenador
+}
+
 renderGameboard(gameInstance.gameboardPlayer1, playerBoard);
-renderGameboard(gameboardComputer, computerBoard);
+renderGameboard(gameboardComputer, computerBoard, handlePlayerAttack);

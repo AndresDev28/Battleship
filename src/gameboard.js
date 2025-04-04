@@ -1,8 +1,9 @@
 export class Gameboard {
   constructor() {
     this.ships = []; // Ship's coordinates in the gameboard
-    this.missedAttacks = [];
-    this.grid = createGrid(10, 10);
+    //this.successfulHits = [];
+    //this.missedAttacks = [];
+    this.grid = Array(10).fill(null).map(() => Array(10).fill(null));
     this.attemptedPlacements = [];
   }
 
@@ -14,16 +15,17 @@ export class Gameboard {
     this.validateShipPlacement(shipCoords);
     this.validateNoOverlap(shipCoords);
 
-    // Si las validaciones pasan, colocar el barco
+    // Colocación en la grid (Si las validaciones pasan, colocar el barco en la grid)
     for (const coords of shipCoords) {
       const [row, col] = coords;
-      this.grid[row][col] = ship;
+      // Guarda el objeto con el barco y su estado de 'hit''
+      this.grid[row][col] = {ship: ship, hit: false};
     }
 
-    // Registrar la colocación del barco
+    // Registrar la colocación del barco para otras lógicas (allShipsSunk)
     const shipPlacement = {
       ship,
-      coordinates,
+      coordinates, // Coordenada inicial para referencia
       isVertical,
     };
     this.ships.push(shipPlacement);
@@ -61,50 +63,66 @@ export class Gameboard {
 
   receiveAttack(coordinates) {
     const [x, y] = coordinates; // Destructure the attack coordinate into x and y variables
+    // 1. Validación de límites
     if (x < 0 || x > 9 || y < 0 || y > 9) { // Check if coordinates are within valid boundaries (assuming a 10x10 grid)
       throw new Error('Invalid coordinates');
     }
 
-    if (this.missedAttacks.some(attack => attack[0] === x && attack[1] === y)) {
+    // 2.  Obtener estado de la celda desde la grid
+    const cell = this.grid[x][y];
+
+    // 3. Comprobar si ya fué atacada (miss o hit)
+    if (cell === 'miss'|| cell && cell.hit === true) {
+      // Ataque repetido
       throw new Error ('Cannot attack the same coordinate twice');
     }
 
-    for (const shipPlacement of this.ships) { // Iterate over each ship placed on the board
-      const {ship, coordinates: shipCoords, isVertical} = shipPlacement; // Destructure properties of the  shipPlacement object
-      const [shipX, shipY] = shipCoords; // Destructure the ship coordinates into shipX and shipY variables
+    // 4. Procesar HIT (si hay barco y no esta 'hit')
+    if (cell && cell.ship) { // cell existe y tiene una propiedad 'ship'
+      // Sabemos que cell.hit es false por el chequeo anterior
+      cell.hit = true;
+      cell.ship.hit(); // LLamamos el método hit del objeto ship
+      console.log("Ship hit!");
 
-      if (isVertical) { // if the ship is placed vertically
-        for (let i = 0; i < ship.length; i++) { // Iterate over the lenght of the ship
-          if (x === shipX + i && y === shipY) { // Check if the attack coordinates match any cell of the ship
-            ship.hit(); // Update ship's state
-            return true; // Return true for any successful hit
-          }
-        }
-      }else { // If the ship is placed horizontally
-        for (let i = 0; i < ship.length; i++) {
-          if (x === shipX && y === shipY + i) {
-            ship.hit(); // Update ship's state
-            return true; // Return true for any successful hit
-          }
-        }
+      // Comprobar y loguear si se hundió (añadir después si quieres)
+      if (cell.ship.isSunk()) {
+        console.log("Ship sunk!"); 
       }
+      return true;
     }
 
-    this.missedAttacks.push(coordinates); // If the loop finishes without finding a ship, record the missed attack
-    return false; // No ship has been hit
+    // 5. Procesar MISS (si la celda está vacía - null)
+    // Si llegamos hasta aqui siginifica que la celda era 'null'y no fue hit ni miss anteriormente
+    this.grid[x][y] = 'miss';
+    console.log("Attackmissed!");
+    
+    return false;
   }
   areAllShipsSunk() {
     return this.ships.every(shipPlacement => shipPlacement.ship.isSunk());
   }
 
-}
+  getCellState(coordinates) {
+    const [x, y] = coordinates;
+    // Validar coordenadas
+    if (x < 0 || x > 9 || y < 0 || y > 9) {
+      console.error("Invalid coordinates for getCellState");
+      return 'invalid'; // o null, o lanzar error
+    }
+    
+    const cell = this.grid[x][y];
 
-function createGrid(rows, columns) {
-  const grid = [];
-  for (let i = 0; i < rows; i++) {
-    grid[i] = new Array(columns).fill(null);
+    if (cell === 'miss') {
+      return 'miss';
+    } else if (cell && cell.hit === true) { // El barco ha sido atacado
+      return 'hit';
+    } else if (cell && cell.ship) { // Hay un barco pero no ha sido atacado
+      return 'ship';
+    } else {
+      return 'empty';
+    }
   }
-  return grid;
+
 }
 
 export function calculateShipCoords(ship, startCoordinates, vertical) {

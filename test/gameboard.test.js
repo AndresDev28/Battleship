@@ -31,7 +31,8 @@ describe('gameboard', () => {
   
       for (const coord of shipCoords) {
         const [row, col] = coord;
-        expect(gameboard.grid[row][col]).toBe(ship); // Verify that the cell contains the 'ship' object.
+        expect(gameboard.grid[row][col].ship).toBe(ship); // Verify that the cell contains the 'ship' object.
+        expect(gameboard.grid[row][col].hit).toBe(false); //Check the 'hit' state
       }
   
       // Verify that the cells around the ship (and the rest of the board) remain empty (null).
@@ -61,7 +62,7 @@ describe('gameboard', () => {
   
       for (const coord of shipCoords) {
         const [row, col] = coord;
-        expect(gameboard.grid[row][col]).toBe(shipVert);
+        expect(gameboard.grid[row][col].ship).toBe(shipVert);
       }
   
       // Verify that the cells around the ship (and the rest of the board) remain empty (null).
@@ -138,7 +139,7 @@ describe('gameboard', () => {
       const isHit = gameboard.receiveAttack([0, 0]);
 
       expect(isHit).toBe(false); // Verify that the attack missed
-      expect(gameboard.missedAttacks).toContainEqual([0, 0]);
+      expect(gameboard.grid[0][0]).toBe('miss');
     });
 
     test('receiveAttack() sink a ship', () => {
@@ -196,6 +197,30 @@ describe('gameboard', () => {
       ship1.hit(); ship1.hit(); ship1.hit(); // Sink ship1
       ship2.hit(); ship2.hit(); // Sink ship2
       expect(gameboard.areAllShipsSunk()).toBe(true);
+    });
+  });
+
+  describe('getCellState', () => {
+    it('should return "empty" for an empty cell', () => {
+      expect(gameboard.getCellState([0, 0])).toBe('empty');
+    });
+
+    it('should return "ship" for a cell with an unhit ship', () => {
+      const ship = new Ship(3);
+      gameboard.placeShip(ship, [0, 0], false);
+      expect(gameboard.getCellState([0, 0])).toBe('ship');
+    });
+
+    it('should return "hit" for a cell with a hit ship', () => {
+      const ship = new Ship(3);
+      gameboard.placeShip(ship, [0, 0], false);
+      gameboard.receiveAttack([0, 0]);
+      expect(gameboard.getCellState([0, 0])).toBe('hit');
+    });
+
+    it('should return "miss" for a missed attack cell', () => {
+      gameboard.receiveAttack([0, 0]);
+      expect(gameboard.getCellState([0, 0])).toBe('miss');
     });
   });
 
