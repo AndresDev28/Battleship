@@ -74,7 +74,9 @@ export class Gameboard {
     // 3. Comprobar si ya fué atacada (miss o hit)
     if (cell === 'miss'|| cell && cell.hit === true) {
       // Ataque repetido
-      throw new Error ('Cannot attack the same coordinate twice');
+      //throw new Error ('Cannot attack the same coordinate twice');
+      console.log("Attack ignored: Already attacked here.");
+      return 'already_attacked'; // Devolver estado
     }
 
     // 4. Procesar HIT (si hay barco y no esta 'hit')
@@ -86,9 +88,10 @@ export class Gameboard {
 
       // Comprobar y loguear si se hundió (añadir después si quieres)
       if (cell.ship.isSunk()) {
-        console.log("Ship sunk!"); 
+        console.log(`Ship sunk!`); 
+        return 'sunk';
       }
-      return true;
+      return 'hit';
     }
 
     // 5. Procesar MISS (si la celda está vacía - null)
@@ -96,7 +99,7 @@ export class Gameboard {
     this.grid[x][y] = 'miss';
     console.log("Attackmissed!");
     
-    return false;
+    return 'miss';
   }
   areAllShipsSunk() {
     return this.ships.every(shipPlacement => shipPlacement.ship.isSunk());

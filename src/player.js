@@ -4,6 +4,8 @@ export class Player {
   constructor(type, gameboard = null) {
     this.gameboard = gameboard || new Gameboard(); // Use provided gameboard or create a new one
     this.type = type; // Human or computer
+    this.hitsMade = 0;
+    this.missesMade = 0;
   }
 
   // Método estático para obtener la longitud del barco según su tipo

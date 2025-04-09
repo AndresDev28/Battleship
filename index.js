@@ -20,6 +20,11 @@ let shipPlacedCount = 0;
 const gameStatusDisplay = document.getElementById("gameStatusContainer");
 const gameInfo = document.getElementById("gameInfo");
 let gameOver = false;
+const playerHitsDisplay = document.getElementById('playerHitsCount');
+const playerMissesDisplay =document.getElementById('playerMissesCount');
+const computerHitsDisplay = document.getElementById('computerHitsCount');
+const computerMissesDisplay = document.getElementById('computerMissesCount');
+
 
 const gameInstance = new Game();
 window.gameInstance = gameInstance;
@@ -199,6 +204,7 @@ function startGameAfterFleetPlaced() {
     gameInfo.style.display = "block";
     computerBoard.classList.remove("hidden");
     computerPlaceShips(gameboardComputer);
+    updateScoreDsiplays();
   }
 }
 
@@ -248,8 +254,8 @@ function computerPlaceShips(gameboardComputer) {
     }
   });
 
-  console.log(`${computerPlayer} placed fleet successfully!`);
-  console.log(`${humanPlayer} start to attack!`);
+  console.log(`${gameInstance.player2} placed fleet successfully!`);
+  console.log(`${gameInstance.player1} start to attack!`);
 }
 
 function handlePlayerAttack(row, col) {
@@ -267,6 +273,12 @@ function handlePlayerAttack(row, col) {
     numericCol,
   ]); // Vemos que devuelve reciceAttack (true/false)
   console.log("Attack result: ", attackResult);
+  if (attackResult === 'hit'|| attackResult === 'sunk') {
+    gameInstance.player1.hitsMade++; // Incrementa el los aciertos del jugador Humano
+  } else if (attackResult === 'miss') {
+    gameInstance.player1.missesMade++; // Incrementa los fallos del jugador humano
+  }
+  updateScoreDisplays(); // Renderizamos el score
   console.log(
     `handlePlayerAttack: Calling renderGameboard for computerBoard UPDATE`,
   );
@@ -300,7 +312,13 @@ function handlePlayerAttack(row, col) {
 
         // 2. Ejecutar el ataque en el tablero del jugador
         const compAttackResult = humanPlayer.gameboard.receiveAttack(compAttackCoords);
-        console.log(`Computer attack result: ${compAttackResult ? "Hit" : "Miss"}`);
+        console.log(`Computer attack result: ${compAttackResult ? "hit" : "miss"}`);
+        if (compAttackResult === 'hit'|| compAttackResult === 'sunk') {
+          gameInstance.player2.hitsMade++;
+        } else if (compAttackResult === 'miss') {
+          gameInstance.player2.missesMade++;
+        }
+        updateScoreDisplays(); // Renderizamos el score
 
         // 3. Actualizar la UI del tablero del Jugador
         console.log("Updating player's board UI...");
@@ -336,6 +354,13 @@ function handlePlayerAttack(row, col) {
     }, 1000); // Fin setTimeout
 
   }
+}
+
+export function updateScoreDisplays() {
+  playerHitsDisplay.textContent = gameInstance.player1.hitsMade;
+  playerMissesDisplay.textContent = gameInstance.player1.missesMade;
+  computerHitsDisplay.textContent = gameInstance.player2.hitsMade;
+  computerMissesDisplay.textContent = gameInstance.player2.missesMade;
 }
 
 renderGameboard(gameInstance.gameboardPlayer1, playerBoard);
