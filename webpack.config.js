@@ -7,12 +7,12 @@ export default {
   entry: './index.js', // Tu punto de entrada principal
   output: {
     filename: 'main.[contenthash].js', // Añade hash para evitar caché
-    path: path.resolve(process.cwd(), 'dist'), // Carpeta de salida
-    clean: true, // Limpia la carpeta dist antes de cada build
+    path: path.resolve(process.cwd(), 'docs'), // Carpeta de salida cambiada a docs
+    clean: true, // Limpia la carpeta docs antes de cada build
   },
   devtool: 'inline-source-map', // Para facilitar la depuración en desarrollo
   devServer: {
-    static: './dist', // Servir archivos desde la carpeta dist
+    static: './docs', // Servir archivos desde la carpeta docs
     open: true, // Abrir navegador automáticamente
     hot: true, // Recarga en caliente (Hot Module Replacement)
   },
