@@ -1,8 +1,9 @@
-import { renderGameboard, updateCellVisual } from "../src/dom.js";
-import { Gameboard, calculateShipCoords } from "../src/gameboard.js";
-import { Game } from "../src/game.js";
-import { Ship } from "../src/ship.js";
-import { Player } from "../src/player.js";
+import "./styles.css";
+import { renderGameboard, updateCellVisual } from "./src/dom.js";
+import { Gameboard, calculateShipCoords } from "./src/gameboard.js";
+import { Game } from "./src/game.js";
+import { Ship } from "./src/ship.js";
+import { Player } from "./src/player.js";
 
 const playerBoard = document.getElementById("playerBoard");
 const computerBoard = document.getElementById("computerBoard");
